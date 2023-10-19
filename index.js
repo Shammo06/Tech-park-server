@@ -27,8 +27,16 @@ async function run() {
     
 
   app.get('/products', async (req, res) => {
-    const cursor = productCollection.find();
-    const result = await cursor.toArray();
+    const product = productCollection.find();
+    const result = await product.toArray();
+    res.send(result);
+  })
+
+  app.get('/products/:brand', async (req, res) => {
+    const targetBrand = req.params.brand;
+    const query = { brand : targetBrand }
+    const product = productCollection.find(query);
+    const result = await product.toArray();
     res.send(result);
   })
 
