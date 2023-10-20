@@ -23,35 +23,42 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+    const latestCollection = client.db('TechDB').collection('latest')
     const productCollection = client.db('TechDB').collection('product');
 
-  app.get('/products', async (req, res) => {
-    const product = productCollection.find();
-    const result = await product.toArray();
-    res.send(result);
-  })
-
-  app.get('/products/:brand', async (req, res) => {
-    const targetBrand = req.params.brand;
-    const query = { brand : targetBrand }
-    const product = productCollection.find(query);
-    const result = await product.toArray();
-    res.send(result);
-  })
-
-  app.get('/product/:id', async (req, res) => {
-    const id = req.params.id;
-    const query = { _id: new ObjectId(id) }
-    const result = await productCollection.findOne(query);
-    res.send(result);
-  })
-
-  app.post('/products', async (req, res) => {
-      const newProduct = req.body;
-      console.log(newProduct);
-      const result = await productCollection.insertOne(newProduct);
+    app.get('/latest', async (req, res) => {
+      const product = latestCollection.find();
+      const result = await product.toArray();
       res.send(result);
-  })
+    })
+
+    app.get('/products', async (req, res) => {
+      const product = productCollection.find();
+      const result = await product.toArray();
+      res.send(result);
+    })
+
+    app.get('/products/:brand', async (req, res) => {
+      const targetBrand = req.params.brand;
+      const query = { brand : targetBrand }
+      const product = productCollection.find(query);
+      const result = await product.toArray();
+      res.send(result);
+    })
+
+    app.get('/product/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await productCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.post('/products', async (req, res) => {
+        const newProduct = req.body;
+        console.log(newProduct);
+        const result = await productCollection.insertOne(newProduct);
+        res.send(result);
+    })
   
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
